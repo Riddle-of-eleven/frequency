@@ -34,7 +34,7 @@ def show_all(row, low, high):
     coefficients, frequencies = pywt.cwt(row, scales, wavelet)
     
     # coefficients = abs(coefficients)
-    coefficients = cut_abs_coefficients(coefficients, 1)
+    coefficients = cut_abs_coefficients(coefficients, 0.4)
     ext_row = np.tile(row, (100, 1))
     # print(coefficients)
 
@@ -60,6 +60,10 @@ def show_all(row, low, high):
 
 
 def cut_abs_coefficients(coeffs, threshold):
+    '''
+    Удаление коэффициентов, которые меньше заданного значения
+    threshold – процент коэффициентов, который занулится
+    '''
     coeffs = abs(coeffs)
     max_value = max(max(coeff) for coeff in coeffs)
     threshold_value = threshold * max_value
@@ -67,7 +71,11 @@ def cut_abs_coefficients(coeffs, threshold):
 
     # return list(map(lambda x: 0 if x < threshold_value else x, coeffs))
     for index, coeff in enumerate(coeffs):
+        print(coeff)
+        print('абоба')
         coeffs[index] = list(map(lambda x: 0 if x < threshold_value else x, coeff))
+        print(coeffs[index])
+
     
     # print(coeffs)
     return coeffs
