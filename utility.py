@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
 import statistics
+from numpy.linalg import norm
+
 
 # morl (Морле) – частокол частот
 # mexh (мексиканская шляпа) – мягкие границы
@@ -10,11 +12,13 @@ import statistics
 
 morl = pywt.ContinuousWavelet('morl') # Морле – частокол частот
 mexh = pywt.ContinuousWavelet('mexh') # Мексиканская шляпа – мягкие границы
-
+gaus1 = pywt.ContinuousWavelet('gaus1') # Вейвлет Гаусса – тоже вроде мягенько
 
 
 wavelet = 'gaus1'
 cmap = 'binary'
+
+
 
 def show_wavelet(row, low, high):
     scales = np.arange(low, high)
@@ -29,11 +33,27 @@ def show_wavelet(row, low, high):
     plt.title("Вейвлет-спектр")
     plt.show()
 
+def analyze_image(image, low, high, threshold):
+    '''
+    Анализирует изображение по рядам
+    image – numpy массив открытого изображения
+    '''
+    # if (0 >= threshold >= 1): return
+    #  for index, row in enumerate(image):
+        # scales = np.arange(low, high)
+        # coeffs, f = pywt.cwt(row, scales, wavelet)
+        # coeffs = cut_abs_coefficients(coeffs, threshold)
+
+        # row_scale = coeffs[1:, :]
+        # print(row_scale)
+    row1 = image[0]
+    row2 = image[1]
+    print(cosine_similarity(row1, row2))
+
+
 def show_all(row, low, high):
     scales = np.arange(low, high)
     coefficients, frequencies = pywt.cwt(row, scales, wavelet)
-    
-    # coefficients = abs(coefficients)
     coefficients = cut_abs_coefficients(coefficients, 0.4)
     ext_row = np.tile(row, (100, 1))
     # print(coefficients)
@@ -67,33 +87,35 @@ def cut_abs_coefficients(coeffs, threshold):
     coeffs = abs(coeffs)
     max_value = max(max(coeff) for coeff in coeffs)
     threshold_value = threshold * max_value
-    print(max_value, threshold_value)
+    # print(max_value, threshold_value)
 
-    # return list(map(lambda x: 0 if x < threshold_value else x, coeffs))
     for index, coeff in enumerate(coeffs):
-        print(coeff)
-        print('абоба')
         coeffs[index] = list(map(lambda x: 0 if x < threshold_value else x, coeff))
-        print(coeffs[index])
-
     
-    # print(coeffs)
     return coeffs
+
+
+
+def cosine_similarity(a, b):
+    aa = np.array(a)
+    bb = np.array(b)
+
+    aaa = np.round(aa)
+    bbb = np.round(bb)
+
+    print(type(aaa), type(bbb))
+    print(aaa, bbb)
+    return (np.dot(aaa, bbb) / (norm(aaa) * norm(bb)))
 
 
 def get_large_scale(row, low, high):
     scales = np.arange(low, high)
     coefficients, frequencies = pywt.cwt(row, scales, wavelet)
     return coefficients[-1:, :]
-
-
-
 def show_graph(row):
     # отображение ряда в виде графика
     plt.plot(row)
     plt.show()
-
-
 def discrete_wavelet(row):
     # дискретное преобразование вейвлет
     cA, cD = pywt.dwt(row, 'haar')
