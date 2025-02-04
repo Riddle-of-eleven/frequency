@@ -97,8 +97,14 @@ def cut_abs_coefficients(coeffs, threshold):
 
 
 def cosine_similarity(a, b):
-    aa = np.array(a)
-    bb = np.array(b)
+    aa = []
+    bb = []
+
+    for A in a:
+        aa.append(int(A))
+
+    for B in b:
+        bb.append(int(B))
 
     aaa = np.round(aa)
     bbb = np.round(bb)
