@@ -15,7 +15,7 @@ mexh = pywt.ContinuousWavelet('mexh') # Мексиканская шляпа – 
 gaus1 = pywt.ContinuousWavelet('gaus1') # Вейвлет Гаусса – тоже вроде мягенько
 
 
-wavelet = 'gaus1'
+wavelet = gaus1
 cmap = 'binary'
 
 
@@ -46,8 +46,18 @@ def analyze_image(image, low, high, threshold):
 
         # row_scale = coeffs[1:, :]
         # print(row_scale)
-    row1 = image[0]
-    row2 = image[1]
+    
+    a = 440
+    b = 460
+    scales = np.arange(low, high)
+    coefficients1, f1 = pywt.cwt(image[a], scales, wavelet)
+    coefficients1 = cut_abs_coefficients(coefficients1, threshold)
+    row1 = coefficients1[-1:, :][0]
+
+    coefficients2, f2 = pywt.cwt(image[b], scales, wavelet)
+    coefficients2 = cut_abs_coefficients(coefficients2, threshold)
+    row2 = coefficients2[-1:, :][0]
+
     print(cosine_similarity(row1, row2))
 
 
