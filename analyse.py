@@ -2,9 +2,9 @@ import pywt
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
-import utility as u
-from numpy.linalg import norm
 
+import utility as u
+import find as f
 
 # PNG
 # file = 'v_long_small'
@@ -20,6 +20,7 @@ file = 'pattern'
 # file = 'cat2'
 # file = 'hand'
 # file = 'building'
+# file = 'test/1'
 
 # ext = 'png'
 ext = 'jpg'
@@ -27,7 +28,7 @@ ext = 'jpg'
 # row_num = 1   # очень маленькие
 # row_num = 13  # кружочки
 # row_num = 130   # чипсы
-row_num = 480   # паттерн
+row_num = 640   # паттерн
 # row_num = 420   # котик
 # row_num = 260   # второй котик
 # row_num = 1200   # здание
@@ -39,41 +40,6 @@ image = np.array(image)
 # ряд пикселей изображения
 row = image[row_num]
 low = 1
-high = 10
+high = 5
 
-# u.show_wavelet(row, low, high)
-# u.discrete_wavelet(row)
-
-# u.show_all(row, low, high)
-u.analyze_image(image, low, high, 0.9)
-
-
-# row1 = np.array([2, 10, 2])
-# row2 = np.array([2, 12, 4])
-# row1 = np.array([46, 46, 172, 172, 46, 46, 172, 172, 46, 46])
-# row2 = np.array([46, 46, 172, 172, 46, 46, 172, 172, 46, 46])
-
-# row1 = np.array([46, 172,  46, 172])
-# row2 = np.array([46, 172,  46, 172])
-# row1 = np.int8(image[0])
-# row2 = image[1]
-# cosine = np.dot(row1, row2)/ (norm(row1) * norm(row2))
-# print(type(row1), type(row2))
-# print(row1, row2)
-# print(cosine)
-
-# print(type(row1[0]))
-# print(type(row2[0]))
-
-# построить комплексную карту для изображения целиком
-
-####
-
-# print(u.get_large_scale(row))
-
-
-# artrow = [10, 10, 10, 240, 240, 240, 10, 10, 10]
-# artrow = [10, 10, 240, 240, 10, 10, 240, 240, 10, 10]
-# artrow = [240, 240, 240, 240, 240, 240, 10, 10, 10, 10, 10, 240, 240, 240, 10, 10, 10, 10]
-# print(u.get_large_scale(artrow, low, high))
-# u.show_all(artrow, low, high)
+f.find_objects(image)

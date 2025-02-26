@@ -6,6 +6,11 @@ import statistics
 from numpy.linalg import norm
 
 
+from rich.table import Table
+from rich.console import Console
+
+
+
 # morl (Морле) – частокол частот
 # mexh (мексиканская шляпа) – мягкие границы
 # gaus1
@@ -64,7 +69,7 @@ def analyze_image(image, low, high, threshold):
 def show_all(row, low, high):
     scales = np.arange(low, high)
     coefficients, frequencies = pywt.cwt(row, scales, wavelet)
-    coefficients = cut_abs_coefficients(coefficients, 0.4)
+    coefficients = cut_abs_coefficients(coefficients, 0.3)
     ext_row = np.tile(row, (100, 1))
     # print(coefficients)
 
@@ -89,7 +94,7 @@ def show_all(row, low, high):
     plt.show()
 
 
-def cut_abs_coefficients(coeffs, threshold):
+def cut_abs_coefficients(coeffs, threshold=0.5):
     '''
     Удаление коэффициентов, которые меньше заданного значения
     threshold – процент коэффициентов, который занулится
@@ -107,21 +112,51 @@ def cut_abs_coefficients(coeffs, threshold):
 
 
 def cosine_similarity(a, b):
-    aa = []
-    bb = []
+    for key, value in enumerate(a):
+        a[key] = int(value)
+    for key, value in enumerate(b):
+        b[key] = int(value)
 
-    for A in a:
-        aa.append(int(A))
+    a = np.round(a)
+    b = np.round(b)
 
-    for B in b:
-        bb.append(int(B))
+    return (np.dot(a, b) / (norm(a) * norm(b)))
 
-    aaa = np.round(aa)
-    bbb = np.round(bb)
 
-    print(type(aaa), type(bbb))
-    print(aaa, bbb)
-    return (np.dot(aaa, bbb) / (norm(aaa) * norm(bb)))
+def analyzeLargeScales(image, low, high):
+    """Последовательно проверяет ряды пикселей в поданном на вход изображении
+
+    :param numpy.ndarray (PIL) image: исходное изображение
+    :param int low: нижняя граница масштаба
+    :param int high: верхняя граница масштаба
+    """
+    console = Console()
+    image_table = Table(show_header=False, show_lines=True)
+    scale_table = Table(show_header=False, show_lines=True)
+    
+    for _ in range(image.shape[1]):
+        image_table.add_column(justify="center")
+    for row in image:
+        image_table.add_row(*[str(pixel) for pixel in row])
+    
+
+    for _ in range(image.shape[1]):
+        scale_table.add_column(justify="center")
+    for row in image:
+        scales = get_large_scale(row, low, high)
+        scales = cut_abs_coefficients(scales)
+        scale_table.add_row(*[str(round(scale)) for scale in scales[0]])
+    
+    console.print(image_table)
+    console.print(scale_table)
+
+
+
+def get_coefficints(row, low, high, threshold):
+    scales = np.arange(low, high)
+    coeffs, _ = pywt.cwt(row, scales, wavelet)
+    coeffs = cut_abs_coefficients(coeffs, threshold)
+    return coeffs[-1:, :]
 
 
 def get_large_scale(row, low, high):
