@@ -111,8 +111,9 @@ def cut_abs_coefficients(coeffs, threshold=0.5):
 
 
 
-def cosine_similarity(a, b):
+def cosine_similarity(a: list[int], b: list[int]) -> list[int]:
     for key, value in enumerate(a):
+        # print(value)
         a[key] = int(value)
     for key, value in enumerate(b):
         b[key] = int(value)
