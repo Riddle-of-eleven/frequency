@@ -20,14 +20,14 @@ mexh = pywt.ContinuousWavelet('mexh') # Мексиканская шляпа – 
 gaus1 = pywt.ContinuousWavelet('gaus1') # Вейвлет Гаусса – тоже вроде мягенько
 
 
-wavelet = gaus1
+wavelet = mexh
 cmap = 'binary'
 
 
 
 def show_wavelet(row, low, high):
     scales = np.arange(low, high)
-    coefficients, frequencies = pywt.cwt(row, scales, wavelet)  # вейвлет мексиканская шляпа
+    coefficients, frequencies = pywt.cwt(row, scales, wavelet)
     # print(coefficients, frequencies)
 
     plt.figure()
@@ -100,12 +100,22 @@ def cut_abs_coefficients(coeffs, threshold=0.5):
     threshold – процент коэффициентов, который занулится
     '''
     coeffs = abs(coeffs)
-    max_value = max(max(coeff) for coeff in coeffs)
-    threshold_value = threshold * max_value
-    # print(max_value, threshold_value)
 
-    for index, coeff in enumerate(coeffs):
-        coeffs[index] = list(map(lambda x: 0 if x < threshold_value else x, coeff))
+    if len(coeffs.shape) == 2:
+        # случай двухмерного массива
+        max_value = max(max(coeff) for coeff in coeffs)
+        threshold_value = threshold * max_value
+        # print(max_value, threshold_value)
+        for index, coeff in enumerate(coeffs):
+            coeffs[index] = list(map(lambda x: 0 if x < threshold_value else x, coeff))
+
+    elif len(coeffs.shape) == 1:
+        # случай одномерного массива
+        max_value = max(coeffs)
+        threshold_value = threshold * max_value
+        # print(max_value, threshold_value)
+        coeffs = list(map(lambda x: 0 if x < threshold_value else x, coeffs))
+    
     
     return coeffs
 
@@ -113,7 +123,6 @@ def cut_abs_coefficients(coeffs, threshold=0.5):
 
 def cosine_similarity(a: list[int], b: list[int]) -> list[int]:
     for key, value in enumerate(a):
-        # print(value)
         a[key] = int(value)
     for key, value in enumerate(b):
         b[key] = int(value)

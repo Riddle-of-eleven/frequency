@@ -14,7 +14,8 @@ import find as f
 # JPG
 # file = 'chips'
 # file = 'chips_contrast'
-file = 'pattern'
+# file = 'pattern'
+file = 'pattern_crop2'
 # file = 'cat'
 # file = 'cat_posterization'
 # file = 'cat2'
@@ -28,10 +29,12 @@ ext = 'jpg'
 # row_num = 1   # очень маленькие
 # row_num = 13  # кружочки
 # row_num = 130   # чипсы
-row_num = 640   # паттерн
+# row_num = 640   # паттерн
 # row_num = 420   # котик
 # row_num = 260   # второй котик
 # row_num = 1200   # здание
+
+row_num = 140
 
 image = Image.open(f'images/{file}.{ext}').convert('L')   # грейскейл
 image = np.array(image)
@@ -42,5 +45,7 @@ row = image[row_num]
 low = 1
 high = 5
 
-f.find_objects(image, threshold=0.8)
-# u.show_all(image, low, high)
+# f.find_objects(image, threshold=0.8)
+# u.show_all(row, low, high)
+
+f.process(image, [low, high])
