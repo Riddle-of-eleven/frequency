@@ -42,5 +42,5 @@ row = image[row_num]
 low = 1
 high = 5
 
-f.find_objects(image)
-u.show_all(image, low, high)
+f.find_objects(image, threshold=0.8)
+# u.show_all(image, low, high)
