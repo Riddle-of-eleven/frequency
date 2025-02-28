@@ -78,4 +78,8 @@ def process(image: np.ndarray, scales: list[int], wavelet:str="morl"):
     a = cwts[140]
     b = cwts[141]
 
-    print(np.maximum(a, b))
+    # sale_prices = [round(price - (price * 30 / 100), 2) if price > 40 else price for price in prices]
+    int_mask = np.maximum(a, b)
+    bool_mask = [True if m > 0 else False for m in int_mask]  # списковое включение
+
+    
