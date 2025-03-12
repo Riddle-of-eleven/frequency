@@ -15,7 +15,7 @@ import find as f
 # file = 'chips'
 # file = 'chips_contrast'
 # file = 'pattern'
-file = 'pattern_crop2'
+file = 'pattern_crop4'
 # file = 'cat'
 # file = 'cat_posterization'
 # file = 'cat2'
@@ -41,7 +41,7 @@ image = np.array(image)
 
 
 # ряд пикселей изображения
-row = image[row_num]
+# row = image[row_num]
 low = 1
 high = 5
 

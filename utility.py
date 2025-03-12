@@ -104,20 +104,25 @@ def cut_abs_coefficients(coeffs, threshold=0.5):
     if len(coeffs.shape) == 2:
         # случай двухмерного массива
         max_value = max(max(coeff) for coeff in coeffs)
+        # min_value = min(min(coeff) for coeff in coeffs)
+        # threshold_value = threshold * ((max_value + min_value) / 2)
         threshold_value = threshold * max_value
-        # print(max_value, threshold_value)
+        # print(max_value, min_value, threshold_value)
         for index, coeff in enumerate(coeffs):
             coeffs[index] = list(map(lambda x: 0 if x < threshold_value else x, coeff))
 
     elif len(coeffs.shape) == 1:
         # случай одномерного массива
         max_value = max(coeffs)
+        # min_value = min(coeffs)
         threshold_value = threshold * max_value
+        # threshold_value = threshold * ((max_value + min_value) / 2)
         # print(max_value, threshold_value)
         coeffs = list(map(lambda x: 0 if x < threshold_value else x, coeffs))
     
     
-    return coeffs
+    # return coeffs
+    return [float(i) for i in coeffs]  # приведение всех элементов к типу float
 
 
 

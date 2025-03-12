@@ -59,6 +59,7 @@ def process(image: np.ndarray, scales: list[int], wavelet:str="morl"):
     for row in image:
         coeffs, _ = pywt.cwt(row, scales, wavelet)
         norm = u.cut_abs_coefficients(coeffs[-1,:], 0.3)    # последний ряд коэффициентов преобразования
+        # norm = abs(coeffs[-1,:])
         cwts.append(norm)
         
     # console = Console()
@@ -75,7 +76,9 @@ def process(image: np.ndarray, scales: list[int], wavelet:str="morl"):
     #     similarities.append(round(u.cosine_similarity(cwt, cwts[index + 1]), 3))
     # print(similarities)
 
-    a = cwts[140]
-    b = cwts[141]
+    # a = cwts[140]
+    # b = cwts[141]
 
-    print(np.maximum(a, b))
+    # print(np.maximum(a, b))
+
+    print(cwts)
