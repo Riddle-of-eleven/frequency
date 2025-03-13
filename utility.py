@@ -9,6 +9,7 @@ from numpy.linalg import norm
 from rich.table import Table
 from rich.console import Console
 
+from typing import Union, Optional, Any
 
 
 # morl (Морле) – частокол частот
@@ -136,6 +137,15 @@ def cosine_similarity(a: list[int], b: list[int]) -> list[int]:
     b = np.round(b)
 
     return (np.dot(a, b) / (norm(a) * norm(b)))
+
+
+def arrint(array: Union[list[float], np.ndarray]) -> np.ndarray:
+    """Преобразует входной массив чисел с плавающей точкой в массив целых чисел
+
+    :param Union[list[float], np.ndarray] array: исходный массив
+    :return np.ndarray: результирующий массив
+    """
+    return np.array([int(a) for a in array])
 
 
 def analyzeLargeScales(image, low, high):
