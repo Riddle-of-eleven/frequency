@@ -9,6 +9,9 @@ from rich.console import Console
 
 import utility as u
 
+from typing import Any
+
+
 def find_objects(image: list[int], low:int=1, high:int=5, step:int=10, threshold:float=0.5, ignore:bool=True):
     """Ищет повторения и закономерности на заданном изображении
 
@@ -52,29 +55,50 @@ def find_objects(image: list[int], low:int=1, high:int=5, step:int=10, threshold
     # console.print(table)
 
 
-
-def process(image: np.ndarray, scales: list[int], wavelet:str="morl"):
-    scales = np.arange(*scales)
-    cwts = []
-    for row in image:
-        coeffs, _ = pywt.cwt(row, scales, wavelet)
-        norm = u.cut_abs_coefficients(coeffs[-1,:], 0.3)    # последний ряд коэффициентов преобразования
-        # norm = abs(coeffs[-1,:])
-        cwts.append(norm)
-
+def find_similarities(cwts:np.ndarray, step:int = 10) -> np.ndarray:
     similarities = []
-    for index, cwt in enumerate(cwts):
-        if index + 1 >= len(cwts): break
-        a = np.array(cwt)
-        b = np.array(cwts[index + 1])
+    i = step
+    # for index, cwt in enumerate(cwts):
+    #     print(index)
+    #     if index + 1 >= len(cwts): break
+    #     a = np.array(cwt)
+    #     b = np.array(cwts[index + 1])
+    #     mask = u.arrint(np.maximum(a, b))
+    #     print(a, b)
+
+    #     filter_a = a[mask != 0]
+    #     filter_b = b[mask != 0]
+
+    #     np.append(similarities, round(u.cosine_similarity(filter_a, filter_b), 3))
+    #     # similarities.append(round(u.cosine_similarity(cwt, cwts[index + 1]), 3))
+
+    while i <= cwts.shape[0]: # высота массива фактически
+        a = np.array(cwts[i])
+        b = np.array(cwts[i - step])
         mask = u.arrint(np.maximum(a, b))
 
         filter_a = a[mask != 0]
         filter_b = b[mask != 0]
 
         similarities.append(round(u.cosine_similarity(filter_a, filter_b), 3))
-        # similarities.append(round(u.cosine_similarity(cwt, cwts[index + 1]), 3))
-    print([float(s) for s in similarities])
+        i += step
+    return np.array(similarities)
+
+def process(image: np.ndarray, scales: list[int], step:int=10, wavelet:str="morl"):
+    scales = np.arange(*scales)
+    cwts: Any = []
+    for row in image:
+        coeffs, _ = pywt.cwt(row, scales, wavelet)
+        norm = u.cut_abs_coefficients(coeffs[-1,:], 0.3)    # последний ряд коэффициентов преобразования
+        # norm = abs(coeffs[-1,:])
+        cwts.append(norm)
+    cwts = np.array(cwts)
+
+    cwts_transpose = cwts.transpose()
+    print(find_similarities(cwts))
+
+    
+    # print([float(s) for s in s1])
 
     # a = np.array(cwts[30])
     # b = np.array(cwts[50])

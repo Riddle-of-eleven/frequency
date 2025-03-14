@@ -6,6 +6,8 @@ from PIL import Image
 import utility as u
 import find as f
 
+from typing import Any
+
 # PNG
 # file = 'v_long_small'
 # file = 'vsmall'
@@ -36,9 +38,8 @@ ext = 'jpg'
 
 row_num = 140
 
-image = Image.open(f'images/{file}.{ext}').convert('L')   # грейскейл
+image: Any = Image.open(f'images/{file}.{ext}').convert('L')   # грейскейл
 image = np.array(image)
-
 
 # ряд пикселей изображения
 # row = image[row_num]
