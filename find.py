@@ -69,12 +69,12 @@ def process(image: np.ndarray, scales: list[int], wavelet:str="morl"):
         b = np.array(cwts[index + 1])
         mask = u.arrint(np.maximum(a, b))
 
-        filter_a =a[mask != 0]
-        filter_b =b[mask != 0]
+        filter_a = a[mask != 0]
+        filter_b = b[mask != 0]
 
         similarities.append(round(u.cosine_similarity(filter_a, filter_b), 3))
         # similarities.append(round(u.cosine_similarity(cwt, cwts[index + 1]), 3))
-    print(similarities)
+    print([float(s) for s in similarities])
 
     # a = np.array(cwts[30])
     # b = np.array(cwts[50])
